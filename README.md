@@ -47,6 +47,7 @@ Download the script directly from GitHub:
 
 ```bash
 wget https://raw.githubusercontent.com/ashcaan/netbw-monitor/refs/heads/main/netbw.sh
+```
 
 ## Make it executable
 
