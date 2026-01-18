@@ -47,3 +47,75 @@ Download the script directly from GitHub:
 
 ```bash
 wget https://raw.githubusercontent.com/ashcaan/netbw-monitor/refs/heads/main/netbw.sh
+
+## Make it executable
+
+After downloading, make the script executable:
+
+chmod +x netbw.sh
+
+---
+
+## Usage
+
+### Interactive mode (recommended)
+
+This mode lists available network interfaces and prompts you to select one:
+
+./netbw.sh
+
+Example:
+Available network interfaces:
+ - lo
+ - eth0
+ - bond0
+
+Enter interface name: eth0
+
+---
+
+### Non-interactive mode
+
+You can also specify the interface directly as an argument:
+
+./netbw.sh eth0
+./netbw.sh bond0
+./netbw.sh ens192
+
+---
+
+## While the script is running
+
+- Throughput is displayed once per second
+- RX and TX values are shown in MB/s
+- Press 'q' to exit the script cleanly
+
+---
+
+## Example output
+
+Monitoring throughput on interface: eth0
+Link speed (negotiated): 10000Mb/s
+Press 'q' to quit.
+
+iface=eth0 | RX: 245.12 MB/s | TX: 0.63 MB/s
+iface=eth0 | RX: 251.04 MB/s | TX: 0.59 MB/s
+
+The example above shows approximately 2 Gbps of inbound traffic.
+
+---
+
+## Notes and limitations
+
+- Reported link speed reflects the negotiated NIC speed, not guaranteed throughput.
+- Bonded, virtual, or logical interfaces may report link speed as Unknown. This is expected behavior.
+- Throughput values represent kernel-level interface traffic, not per-process usage.
+- For bonded interfaces, detailed slave information can be found in:
+
+/proc/net/bonding/<bond_name>
+
+---
+
+## License
+
+MIT License
