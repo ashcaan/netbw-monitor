@@ -82,14 +82,32 @@ BEGIN {
 }' &
 MON_PID=$!
 
-# Key listener
-while true; do
-  read -rsn1 key
-  if [[ "$key" == "q" ]]; then
-    echo
-    echo "Exiting..."
+# Cleanup on exit (any reason)
+cleanup() {
+  if [ -n "$MON_PID" ]; then
     kill "$MON_PID" 2>/dev/null
     wait "$MON_PID" 2>/dev/null
-    exit 0
+  fi
+}
+trap cleanup EXIT
+trap 'exit 0' INT TERM
+
+# If there is no controlling terminal, we can't read keystrokes.
+# In that case, just wait for the monitor process and rely on signals.
+if [ ! -r /dev/tty ]; then
+  echo "No controlling terminal detected; 'q' to quit is disabled. Use Ctrl+C or kill the process." >&2
+  wait "$MON_PID"
+  exit 0
+fi
+
+# Key listener (reads from the actual terminal, not stdin)
+while true; do
+  # -r: raw input, -s: silent, -n1: one character
+  if read -rsn1 key </dev/tty; then
+    if [[ "$key" == "q" ]]; then
+      echo
+      echo "Exiting..."
+      exit 0
+    fi
   fi
 done
